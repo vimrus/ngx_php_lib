@@ -75,6 +75,8 @@ class Resource
 				$this->method = 'PUT';
 			}
 			break;
+		case CURL_HEADER:
+			break;
 		}
 	}
 
@@ -92,7 +94,7 @@ class Resource
 		if(isset($parsedURL['query'])) $this->query = $parsedURL['query'];
 
 		$this->sock->connect($this->host, $this->port);
-		$string = $this->method . ' ' . $this->path . " HTTP/1.1\r\nHost: " . $this->host . "\r\nConnection: Close\r\n\r\n";
+		$string = $this->method . ' ' . $this->path . " HTTP/1.1\r\nHost: " . $this->host . "\r\nConnection: keep-alive\r\n\r\n";
 		$this->sock->send($string);
 		$output = $this->sock->receive();
 		if($this->file)
@@ -101,7 +103,7 @@ class Resource
 		}
 		else
 		{
-			if($returnTransfer)
+			if($this->returnTransfer)
 			{
 				return $output;
 			}
